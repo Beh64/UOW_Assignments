@@ -1,0 +1,147 @@
+Solution for A3, Task 1
+Student number: 9890385
+Name: Joel Beh Zhirong
+---------------------------------------------------------------------
+(0) Select database bankDB and drop collection accounts (if it exists.)
+
+db = db.getSiblingDB("bankDB")
+db.accounts.drop();
+
+(1) Insert first ACCOUNT document (acctNumber A1001).
+
+db.accounts.insertOne(
+{
+  ACCOUNT: {
+    acctNumber: 'A1001',
+    balance: 1201,
+    owns: {
+      CUSTOMER: {
+        custId: 'C001',
+        firstName: 'Alice',
+        lastName: 'Tan'
+      }
+    },
+    is_opened_at: {
+      BRANCH: {
+        brchName: 'Punggol',
+        address: '1 Punggol Road, Singapore'
+      }
+    },
+    attended_by: {
+      EMPLOYEE: {
+        eNum: 'E001',
+        fullName: 'Elon Lim',
+        spouseName: [
+          'Britney Lim'
+        ],
+        works_in: {
+          BRANCH: {
+            brchName: 'Punggol',
+            address: '1 Punggol Road, Singapore'
+          }
+        }
+      }
+    }
+  }
+}
+);
+
+Confirmation message for insertion of A1001
+{
+  acknowledged: true,
+  insertedId: ObjectId('691edc9791660855fc61842e')
+}
+
+(2) Insert second ACCOUNT document (acctNumber A2002).
+
+db.accounts.insertOne(
+{
+  ACCOUNT: {
+    acctNumber: 'A2002',
+    balance: 5493.5,
+    owns: {
+      CUSTOMER: {
+        custId: 'C002',
+        firstName: 'Bruce',
+        lastName: 'Lee'
+      }
+    },
+    is_opened_at: {
+      BRANCH: {
+        brchName: 'Airport',
+        address: '60 Airport Boulevard, Singapore'
+      }
+    },
+    attended_by: {
+      EMPLOYEE: {
+        eNum: 'E002',
+        fullName: 'Amos Yee',
+        spouseName: [],
+        works_in: {
+          BRANCH: {
+            brchName: 'Airport',
+            address: '60 Airport Boulevard, Singapore'
+          }
+        }
+      }
+    }
+  }
+}
+);
+
+Confirmation message for insertion of A2002
+{
+  acknowledged: true,
+  insertedId: ObjectId('691edc9791660855fc61842f')
+}
+
+(3) Insert third ACCOUNT document (acctNumber A3003).
+
+db.accounts.insertOne(
+{
+  ACCOUNT: {
+    acctNumber: 'A3003',
+    balance: 924.7,
+    owns: {
+      CUSTOMER: {
+        custId: 'C003',
+        firstName: 'Mia',
+        lastName: 'Malkovich'
+      }
+    },
+    is_opened_at: {
+      BRANCH: {
+        brchName: 'Tampines',
+        address: '55 Tampines Avenue, Singapore'
+      }
+    },
+    attended_by: {
+      EMPLOYEE: {
+        eNum: 'E003',
+        fullName: 'Charlie Kirk',
+        spouseName: [
+          'Amanda Kirk',
+          'Taylor Kirk'
+        ],
+        works_in: {
+          BRANCH: {
+            brchName: 'Tampines',
+            address: '55 Tampines Avenue, Singapore'
+          }
+        }
+      }
+    }
+  }
+}
+);
+
+Confirmation message for insertion of A3003:
+{
+  acknowledged: true,
+  insertedId: ObjectId('691edc9791660855fc618430')
+}
+
+(4) Display all ACCOUNT documents from collection accounts.
+
+db.accounts.find().pretty();
+

@@ -1,0 +1,583 @@
+Current Mongosh Log ID:	691ed29bf95e50c78f3c5219
+Connecting to:		mongodb://127.0.0.1:4000/subjectDB?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.9
+Using MongoDB:		7.0.26
+Using Mongosh:		2.5.9
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-11-20T12:04:29.429+08:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2025-11-20T12:04:29.429+08:00: This server is bound to localhost. Remote systems will be unable to connect to this server. Start the server with --bind_ip <address> to specify which IP addresses it should serve responses from, or with --bind_ip_all to bind to all interfaces. If this behavior is desired, start the server with --bind_ip 127.0.0.1 to disable this warning
+   2025-11-20T12:04:29.429+08:00: Soft rlimits for open file descriptors too low
+------
+
+subjectDB> Solution for A3, Task 2
+
+subjectDB> Student number: 9890385
+
+subjectDB> Name: Joel Beh Zhirong
+
+subjectDB> ---------------------------------------------------------------------
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (1) Display all subject codes and titles from the collection.
+
+subjectDB> 
+
+subjectDB> | | | | | db.Subject.find(
+  {},
+  {_id: 0, "subject.subCode": 1, "subject.subTitle": 1}
+).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | [
+  {
+    subject: {
+      subCode: 'CSCI103',
+      subTitle: 'Algorithm and Problem Solving'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI114',
+      subTitle: 'Procedural Programming'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI124',
+      subTitle: 'Applied Programming'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI235',
+      subTitle: 'Database Systems'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI203',
+      subTitle: 'Algorithm and Data Structures'
+    }
+  },
+  {
+    subject: {
+      subCode: 'IACT201',
+      subTitle: 'Professional Practice and Ethics'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI321',
+      subTitle: 'Final Year Project'
+    }
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (2) Find all Core subjects with more than 3 assessments.
+
+subjectDB> 
+
+subjectDB> | | | | | | | db.Subject.aggregate([
+  {$match: {"subject.type": "Core"}},
+  {$addFields: {numAssessments: {$size: "$subject.assessments"}}},
+  {$match: {numAssessments: {$gt: 3}}},
+  {$project: {_id: 0, "subject.subCode": 1, "subject.subTitle": 1, numAssessments: 1}}
+]).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | | | [
+  {
+    subject: {
+      subCode: 'CSCI103',
+      subTitle: 'Algorithm and Problem Solving'
+    },
+    numAssessments: 5
+  },
+  {
+    subject: {
+      subCode: 'CSCI114',
+      subTitle: 'Procedural Programming'
+    },
+    numAssessments: 7
+  },
+  {
+    subject: {
+      subCode: 'CSCI124',
+      subTitle: 'Applied Programming'
+    },
+    numAssessments: 5
+  },
+  {
+    subject: {
+      subCode: 'CSCI235',
+      subTitle: 'Database Systems'
+    },
+    numAssessments: 5
+  },
+  {
+    subject: {
+      subCode: 'CSCI203',
+      subTitle: 'Algorithm and Data Structures'
+    },
+    numAssessments: 4
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (3) List the subject title, type, and total credit points for subject worth at least 3 credits.
+
+subjectDB> 
+
+subjectDB> | | | | | db.Subject.find(
+  {"subject.credit": {$gte: 3}},
+  {_id: 0, "subject.subTitle": 1, "subject.type": 1, "subject.credit": 1}
+).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | [
+  {
+    subject: {
+      subTitle: 'Algorithm and Problem Solving',
+      credit: 3,
+      type: 'Core'
+    }
+  },
+  {
+    subject: {
+      subTitle: 'Procedural Programming',
+      credit: 3,
+      type: 'Core'
+    }
+  },
+  {
+    subject: {
+      subTitle: 'Applied Programming',
+      credit: 3,
+      type: 'Core'
+    }
+  },
+  {
+    subject: {
+      subTitle: 'Database Systems',
+      credit: 3,
+      type: 'Core'
+    }
+  },
+  {
+    subject: {
+      subTitle: 'Algorithm and Data Structures',
+      credit: 3,
+      type: 'Core'
+    }
+  },
+  {
+    subject: {
+      subTitle: 'Professional Practice and Ethics',
+      credit: 3,
+      type: 'Elective'
+    }
+  },
+  {
+    subject: {
+      subTitle: 'Final Year Project',
+      credit: 6,
+      type: 'Core'
+    }
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (4) Display the subject code and total number of assessments for each subject.
+
+subjectDB> 
+
+subjectDB> | | | | db.Subject.aggregate([
+  {$project: {_id: 0, "subject.subCode": 1, numAssessments: {$size: "$subject.assessments"}}}
+]).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | [
+  {
+    subject: {
+      subCode: 'CSCI103'
+    },
+    numAssessments: 5
+  },
+  {
+    subject: {
+      subCode: 'CSCI114'
+    },
+    numAssessments: 7
+  },
+  {
+    subject: {
+      subCode: 'CSCI124'
+    },
+    numAssessments: 5
+  },
+  {
+    subject: {
+      subCode: 'CSCI235'
+    },
+    numAssessments: 5
+  },
+  {
+    subject: {
+      subCode: 'CSCI203'
+    },
+    numAssessments: 4
+  },
+  {
+    subject: {
+      subCode: 'IACT201'
+    },
+    numAssessments: 3
+  },
+  {
+    subject: {
+      subCode: 'CSCI321'
+    },
+    numAssessments: 2
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (5) List the titles of all subjects whose assessment weights adds up to more than 80%.
+
+subjectDB> 
+
+subjectDB> | | | | | | db.Subject.aggregate([
+  {$project: {"subject.subTitle": 1, totalWeight: {$sum: "$subject.assessments.weight"}}},
+  {$match: {totalWeight: {$gt: 80}}},
+  {$project: {_id: 0, "subject.subTitle": 1, totalWeight: 1}}
+]).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | | [
+  {
+    subject: {
+      subTitle: 'Algorithm and Problem Solving'
+    },
+    totalWeight: 100
+  },
+  {
+    subject: {
+      subTitle: 'Procedural Programming'
+    },
+    totalWeight: 100
+  },
+  {
+    subject: {
+      subTitle: 'Applied Programming'
+    },
+    totalWeight: 100
+  },
+  {
+    subject: {
+      subTitle: 'Database Systems'
+    },
+    totalWeight: 100
+  },
+  {
+    subject: {
+      subTitle: 'Algorithm and Data Structures'
+    },
+    totalWeight: 100
+  },
+  {
+    subject: {
+      subTitle: 'Professional Practice and Ethics'
+    },
+    totalWeight: 100
+  },
+  {
+    subject: {
+      subTitle: 'Final Year Project'
+    },
+    totalWeight: 100
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (6) Find the subjects that include an Examination as part of their assessment. Show subject code and title only.
+
+subjectDB> 
+
+subjectDB> | | | | | db.Subject.find(
+  {"subject.assessments.assessType": "Examination"},
+  {_id: 0, "subject.subCode": 1, "subject.subTitle": 1}
+).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | [
+  {
+    subject: {
+      subCode: 'CSCI103',
+      subTitle: 'Algorithm and Problem Solving'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI114',
+      subTitle: 'Procedural Programming'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI124',
+      subTitle: 'Applied Programming'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI235',
+      subTitle: 'Database Systems'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI203',
+      subTitle: 'Algorithm and Data Structures'
+    }
+  },
+  {
+    subject: {
+      subCode: 'IACT201',
+      subTitle: 'Professional Practice and Ethics'
+    }
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (7) List each subject together with its number of Assignments (assessType = "Assignment").
+
+subjectDB> 
+
+subjectDB> | | | | | | | | | db.Subject.aggregate([
+  {$project: {
+    "subject.subCode": 1,
+    "subject.subTitle": 1,
+    assignmentList: {$filter: {input: "$subject.assessments", as: "a", cond: {$eq: ["$$a.assessType", "Assignment"]}}}
+  }},
+  {$project: {_id: 0, "subject.subCode": 1, "subject.subTitle": 1, numAssignments: {$size: "$assignmentList"}}}
+]).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | | | | | | | | | | | | | | | | | | | | [
+  {
+    subject: {
+      subCode: 'CSCI103',
+      subTitle: 'Algorithm and Problem Solving'
+    },
+    numAssignments: 3
+  },
+  {
+    subject: {
+      subCode: 'CSCI114',
+      subTitle: 'Procedural Programming'
+    },
+    numAssignments: 3
+  },
+  {
+    subject: {
+      subCode: 'CSCI124',
+      subTitle: 'Applied Programming'
+    },
+    numAssignments: 3
+  },
+  {
+    subject: {
+      subCode: 'CSCI235',
+      subTitle: 'Database Systems'
+    },
+    numAssignments: 3
+  },
+  {
+    subject: {
+      subCode: 'CSCI203',
+      subTitle: 'Algorithm and Data Structures'
+    },
+    numAssignments: 3
+  },
+  {
+    subject: {
+      subCode: 'IACT201',
+      subTitle: 'Professional Practice and Ethics'
+    },
+    numAssignments: 1
+  },
+  {
+    subject: {
+      subCode: 'CSCI321',
+      subTitle: 'Final Year Project'
+    },
+    numAssignments: 0
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (8) Find all subjects that have Pearson as one of their book publishers.
+
+subjectDB> 
+
+subjectDB> | | | | | db.Subject.find(
+  {"subject.book.publisher": "Pearson"},
+  {_id: 0, "subject.subCode": 1, "subject.subTitle": 1}
+).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | [
+  {
+    subject: {
+      subCode: 'CSCI103',
+      subTitle: 'Algorithm and Problem Solving'
+    }
+  },
+  {
+    subject: {
+      subCode: 'CSCI203',
+      subTitle: 'Algorithm and Data Structures'
+    }
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (9) List the bookTitle, author(s), and publisher for all reference books (bookType = "reference").
+
+subjectDB> 
+
+subjectDB> | | | | | | db.Subject.aggregate([
+  {$unwind: "$subject.book"},
+  {$match: {"subject.book.bookType": "reference"}},
+  {$project: {_id: 0, bookTitle: "$subject.book.bookTitle", author: "$subject.book.author", publisher: "$subject.book.publisher"}}
+]).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | | | | | | | [
+  {
+    author: [
+      'B A Forouzan',
+      'D S Malik',
+      'M K Sen Thomson'
+    ],
+    publisher: 'Pearson'
+  },
+  {
+    bookTitle: 'C++ Programming - Program design including data structure',
+    author: [
+      'Malik D S'
+    ],
+    publisher: 'CENGAGE Learning'
+  },
+  {
+    bookTitle: 'Starting Out With C++: From Control Structures through Objects',
+    author: [
+      'Tony Gaddis'
+    ],
+    publisher: 'Addison-Wesley'
+  },
+  {
+    bookTitle: 'C++ Programming - Program design including data structure',
+    author: [
+      'Malik D S'
+    ],
+    publisher: 'CENGAGE Learning'
+  },
+  {
+    bookTitle: 'Starting Out With C++: From Control Structures through Objects',
+    author: [
+      'Tony Gaddis'
+    ],
+    publisher: 'Addison-Wesley'
+  },
+  {
+    bookTitle: 'Database Management Systems',
+    author: [
+      'Raghur Ramakrishnan',
+      'Johannes Gehrke'
+    ],
+    publisher: 'McGraw-Hill'
+  },
+  {
+    bookTitle: 'Introduction to Algorithms',
+    author: [
+      'Thomas H Cormen',
+      'Charles E Leiserson',
+      'Ronald L Riverst',
+      'Clifford Stein'
+    ],
+    publisher: 'The MIT Press'
+  }
+]
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> 
+subjectDB> (10) Find subjects where at least one textbook was published before 2010. Display the subject code and textbook title.
+
+subjectDB> 
+
+subjectDB> | | | | | | db.Subject.aggregate([
+  {$unwind: "$subject.book"},
+  {$match: {"subject.book.bookType": "textbook", "subject.book.yearPub": {$lt: 2010}}},
+  {$project: {_id: 0, "subject.subCode": 1, bookTitle: "$subject.book.bookTitle"}}
+]).toArray();
+
+subjectDB> 
+
+subjectDB> 
+subjectDB> | | | | | | | | | | []
+
+subjectDB> 
+
+subjectDB> 
